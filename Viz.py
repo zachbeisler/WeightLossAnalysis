@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-
-sns.set_theme()
 
 def load_data():
-    df = pd.read_csv("Data.csv")
-    df["Date"] = pd.to_datetime(df["Date"])
-    return df
+    weight_data = pd.read_csv("Data.csv")
+    weight_data["Date"] = pd.to_datetime(weight_data["Date"])
+    important_dates = pd.read_csv("ImportantDates.csv")
+    important_dates["Date"] = pd.to_datetime(important_dates["Date"])
+    return weight_data, important_dates
 
 def datetime_to_days(s, reference):
     return (s - reference).dt.days
@@ -26,16 +25,23 @@ def plot_regression(df):
     coef = np.polyfit(days, df["Weight"], 1)
     poly1d_fn = np.poly1d(coef)
     
-    label = f"Average Weight Change: {coef[0]*7:.1f} lbs/week"
+    label = f"Average Weight Change: {coef[0]*7:.2f} lbs/week"
     
     y = [poly1d_fn(day) for day in days]
     plt.plot(df["Date"], y, "--k", label=label)
     plt.legend()
     return label
+    
+def plot_dates(df):
+    for index, row in df.iterrows():
+        plt.axvline(row["Date"], c="red")
+        plt.text(row["Date"], 280, row["Label"], c="red", rotation="vertical", horizontalalignment='center',
+            verticalalignment='center', bbox={"facecolor":"white", "edgecolor":"white"})
 
 
 if __name__ == "__main__":
-    df = load_data()
-    plot_weight(df)
-    print(plot_regression(df))
+    weight_data, important_dates = load_data()
+    plot_weight(weight_data)
+    print(plot_regression(weight_data))
+    plot_dates(important_dates)
     plt.show()
