@@ -41,6 +41,11 @@ def plot_dates(df):
 
 if __name__ == "__main__":
     weight_data, important_dates = load_data()
+    year = input("Enter year (blank for all years): ")
+    if year != "":
+        year = int(year)
+        weight_data = weight_data[weight_data["Date"].dt.year == year]
+        important_dates = important_dates[important_dates["Date"].dt.year == year]
     plot_weight(weight_data)
     print(plot_regression(weight_data))
     plot_dates(important_dates)
