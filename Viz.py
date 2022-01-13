@@ -14,7 +14,8 @@ def datetime_to_days(s, reference):
 
 def plot_weight(df):
     plt.scatter(df["Date"], df["Weight"])
-    plt.ylim([180, 320])
+    plt.ylim([180, df["Weight"].max() + 60])
+    plt.xlim([df["Date"].min(), df["Date"].max()])
     plt.title("Weight Loss")
     plt.xlabel("Date")
     plt.ylabel("Weight (lbs)")
@@ -33,9 +34,10 @@ def plot_regression(df):
     return label
     
 def plot_dates(df):
+    bottom, top = plt.ylim()
     for index, row in df.iterrows():
         plt.axvline(row["Date"], c="red")
-        plt.text(row["Date"], 280, row["Label"], c="red", rotation="vertical", horizontalalignment='center',
+        plt.text(row["Date"], top - 40, row["Label"], c="red", rotation="vertical", horizontalalignment='center',
             verticalalignment='center', bbox={"facecolor":"white", "edgecolor":"white"})
 
 
